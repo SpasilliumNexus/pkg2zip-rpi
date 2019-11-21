@@ -1,12 +1,5 @@
-ifeq ($(OS),Windows_NT)
-  RM := del /q
-  EXE := .exe
-else
-  EXE :=
-endif
-
-BIN=pkg2zip${EXE}
-SRC=${wildcard pkg2zip*.c} miniz_tdef.c puff.c
+BIN=pkg2zip
+SRC=pkg2zip.c pkg2zip_aes.c pkg2zip_crc32.c pkg2zip_out.c pkg2zip_psp.c pkg2zip_sys.c pkg2zip_zip.c pkg2zip_zrif.c miniz_tdef.c puff.c
 OBJ=${SRC:.c=.o}
 DEP=${SRC:.c=.d}
 
@@ -23,14 +16,6 @@ clean:
 ${BIN}: ${OBJ}
 	@echo [L] $@
 	@${CC} ${LDFLAGS} -o $@ $^
-
-%aes_x86.o: %aes_x86.c
-	@echo [C] $<
-	@${CC} ${CFLAGS} -maes -mssse3 -MMD -c -o $@ $<
-
-%crc32_x86.o: %crc32_x86.c
-	@echo [C] $<
-	@${CC} ${CFLAGS} -mpclmul -msse4 -MMD -c -o $@ $<
 
 %.o: %.c
 	@echo [C] $<
